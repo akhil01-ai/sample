@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Furniture Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light gray background */
+        }
+        .page-section {
+            min-height: calc(100vh - 4rem); /* Adjust for header if needed */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        .product-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Replace 'G-8NS198Y38J' with your actual Google Analytics 4 Measurement ID (e.g., G-XXXXXXXXXX) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8NS198Y38J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        // Configure gtag with your GA4 Measurement ID
+        gtag('config', 'G-8NS198Y38J');
+
+        // Initial page view for the SPA when it first loads
+        gtag('event', 'page_view', {
+            page_title: 'Home Page',
+            page_location: window.location.href,
+            page_path: '/home'
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Header (Optional, but good for navigation) -->
+    <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-3xl font-bold text-gray-800">
+            <a href="#" onclick="showPage('home-page'); return false;">FurniStore</a>
+        </h1>
+        <nav>
+            <ul class="flex space-x-6">
+                <li><a href="#" onclick="showPage('home-page'); return false;" class="text-gray-600 hover:text-blue-600 font-medium">Home</a></li>
+                <li><a href="#" onclick="showPage('product-listing-page'); return false;" class="text-gray-600 hover:text-blue-600 font-medium">Shop</a></li>
+                <li><a href="#" onclick="showPage('checkout-page'); renderCartSummary(); return false;" class="text-gray-600 hover:text-blue-600 font-medium">Cart (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Home Page -->
+    <section id="home-page" class="page-section bg-gradient-to-r from-blue-50 to-indigo-100 flex items-center justify-center text-center">
+        <div class="container py-20">
+            <h2 class="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+                Your Dream Home Starts Here
+            </h2>
+            <p class="text-xl text-gray-700 mb-10 max-w-2xl mx-auto">
+                Discover exquisite furniture pieces that blend comfort, style, and durability.
+            </p>
+            <button onclick="showPage('product-listing-page')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transform transition duration-300 hover:scale-105">
+                Explore Our Collection
+            </button>
+
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Living Room</h3>
+                    <img src="https://placehold.co/400x250/E0F2F7/2C3E50?text=Sofa" alt="Living Room Furniture" class="w-full h-40 object-cover rounded-md mb-4">
+                    <p class="text-gray-600 mb-4">Cozy sofas, stylish coffee tables, and elegant TV units.</p>
+                    <button onclick="showPage('product-listing-page')" class="text-blue-600 hover:text-blue-800 font-medium">Shop Living Room &rarr;</button>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Bedroom</h3>
+                    <img src="https://placehold.co/400x250/F0F4C3/2C3E50?text=Bed" alt="Bedroom Furniture" class="w-full h-40 object-cover rounded-md mb-4">
+                    <p class="text-gray-600 mb-4">Comfortable beds, spacious wardrobes, and chic nightstands.</p>
+                    <button onclick="showPage('product-listing-page')" class="text-blue-600 hover:text-blue-800 font-medium">Shop Bedroom &rarr;</button>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Dining Room</h3>
+                    <img src="https://placehold.co/400x250/FCE4EC/2C3E50?text=Table" alt="Dining Room Furniture" class="w-full h-40 object-cover rounded-md mb-4">
+                    <p class="text-gray-600 mb-4">Elegant dining tables and chairs for every occasion.</p>
+                    <button onclick="showPage('product-listing-page')" class="text-blue-600 hover:text-blue-800 font-medium">Shop Dining Room &rarr;</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Listing Page -->
+    <section id="product-listing-page" class="page-section hidden bg-gray-50">
+        <div class="container py-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-10 text-center">Our Furniture Collection</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="product-grid">
+                <!-- Product cards will be injected here by JavaScript -->
+            </div>
+            <div class="text-center mt-12">
+                <button onclick="showPage('home-page')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg shadow transition duration-300">
+                    &larr; Back to Home
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Detail Page -->
+    <section id="product-detail-page" class="page-section hidden bg-white">
+        <div class="container py-12 flex flex-col md:flex-row items-start md:space-x-10">
+            <div class="md:w-1/2 mb-8 md:mb-0">
+                <img id="detail-product-image" src="" alt="Product Image" class="w-full h-96 object-cover rounded-lg shadow-lg">
+            </div>
+            <div class="md:w-1/2">
+                <h2 id="detail-product-name" class="text-4xl font-bold text-gray-900 mb-4"></h2>
+                <p id="detail-product-price" class="text-3xl font-semibold text-blue-600 mb-6"></p>
+                <p id="detail-product-description" class="text-gray-700 leading-relaxed mb-8"></p>
+
+                <div class="flex items-center space-x-4 mb-8">
+                    <label for="quantity" class="text-lg font-medium text-gray-700">Quantity:</label>
+                    <input type="number" id="detail-product-quantity" value="1" min="1" class="w-20 p-2 border border-gray-300 rounded-md text-center">
+                </div>
+
+                <button id="detail-add-to-cart-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition duration-300 hover:scale-105 mr-4">
+                    Add to Cart
+                </button>
+                <button onclick="showPage('product-listing-page')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg shadow transition duration-300">
+                    &larr; Back to Products
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Page -->
+    <section id="checkout-page" class="page-section hidden bg-gray-50">
+        <div class="container py-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-10 text-center">Checkout</h2>
+
+            <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Your Cart</h3>
+                <div id="cart-summary" class="space-y-4">
+                    <!-- Cart items will be injected here by JavaScript -->
+                    <p class="text-gray-600 text-center" id="empty-cart-message">Your cart is empty.</p>
+                </div>
+                <div class="border-t border-gray-200 pt-6 mt-6 flex justify-between items-center">
+                    <span class="text-xl font-bold text-gray-800">Total:</span>
+                    <span id="cart-total" class="text-2xl font-bold text-blue-600">₹0.00</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Shipping Information</h3>
+                <form id="checkout-form" class="space-y-6">
+                    <div>
+                        <label for="full-name" class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                        <input type="text" id="full-name" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe" required>
+                    </div>
+                    <div>
+                        <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Address</label>
+                        <input type="text" id="address" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="123 Main St" required>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="city" class="block text-gray-700 text-sm font-bold mb-2">City</label>
+                            <input type="text" id="city" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Anytown" required>
+                        </div>
+                        <div>
+                            <label for="zip" class="block text-gray-700 text-sm font-bold mb-2">Zip Code</label>
+                            <input type="text" id="zip" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12345" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="email" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="john.doe@example.com" required>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-6">
+                        <button type="button" onclick="showPage('product-listing-page')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg shadow transition duration-300">
+                            &larr; Continue Shopping
+                        </button>
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition duration-300 hover:scale-105">
+                            Place Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Modal for Alerts -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <p id="modal-message" class="text-lg font-semibold text-gray-800 mb-6"></p>
+            <button onclick="hideModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow transition duration-300">
+                OK
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // Define a conversion rate (example: 1 USD = 83 INR)
+        const USD_TO_INR_RATE = 83;
+
+        // --- Product Data ---
+        const products = [
+            {
+                id: 'prod1',
+                name: 'Elegant Sofa Set',
+                // Converted from $1200
+                price: 1200 * USD_TO_INR_RATE,
+                image: 'https://placehold.co/400x300/E0F2F7/2C3E50?text=Sofa+Set',
+                description: 'A luxurious and comfortable sofa set, perfect for any living room. Made with high-quality fabric and sturdy wooden frame. Includes a 3-seater sofa, a 2-seater sofa, and an armchair.'
+            },
+            {
+                id: 'prod2',
+                name: 'Modern Dining Table',
+                // Converted from $750
+                price: 750 * USD_TO_INR_RATE,
+                image: 'https://placehold.co/400x300/F0F4C3/2C3E50?text=Dining+Table',
+                description: 'Sleek and modern dining table with a tempered glass top and chrome legs. Seats 6-8 people comfortably. Ideal for contemporary homes.'
+            },
+            {
+                id: 'prod3',
+                name: 'King Size Bed Frame',
+                // Converted from $900
+                price: 900 * USD_TO_INR_RATE,
+                image: 'https://placehold.co/400x300/FCE4EC/2C3E50?text=Bed+Frame',
+                description: 'A robust and stylish king-size bed frame made from solid oak. Features a minimalist design that complements any bedroom decor. Mattress not included.'
+            },
+            {
+                id: 'prod4',
+                name: 'Ergonomic Office Chair',
+                // Converted from $350
+                price: 350 * USD_TO_INR_RATE,
+                image: 'https://placehold.co/400x300/E8F5E9/2C3E50?text=Office+Chair',
+                description: 'High-back ergonomic office chair with adjustable lumbar support, armrests, and headrest. Designed for maximum comfort during long working hours.'
+            },
+            {
+                id: 'prod5',
+                name: 'Bookshelf with Storage',
+                // Converted from $400
+                price: 400 * USD_TO_INR_RATE,
+                image: 'https://placehold.co/400x300/FFFDE7/2C3E50?text=Bookshelf',
+                description: 'Versatile bookshelf with open shelves and two closed cabinets for discreet storage. Perfect for organizing books, decor, and more.'
+            },
+            {
+                id: 'prod6',
+                name: 'Outdoor Patio Set',
+                // Converted from $1500
+                price: 1500 * USD_TO_INR_RATE,
+                image: 'https://placehold.co/400x300/E3F2FD/2C3E50?text=Patio+Set',
+                description: 'Durable outdoor patio set made from weather-resistant wicker and aluminum. Includes a sofa, two armchairs, and a coffee table. Perfect for your garden or balcony.'
+            }
+        ];
+
+        let cart = []; // Stores items in the cart
+
+        // --- Utility Functions for Page Navigation and Modals ---
+
+        /**
+         * Shows a specific page and hides all others.
+         * Also sends a custom 'page_view' event for SPA navigation.
+         * @param {string} pageId The ID of the page section to show.
+         */
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.add('hidden')); // Hide all pages
+            document.getElementById(pageId).classList.remove('hidden'); // Show the target page
+            window.scrollTo(0, 0); // Scroll to top of the page
+
+            // --- gtag.js: Send a custom page_view event for SPA navigation ---
+            let pageTitle = '';
+            let pagePath = '';
+
+            switch (pageId) {
+                case 'home-page':
+                    pageTitle = 'Home Page';
+                    pagePath = '/home';
+                    break;
+                case 'product-listing-page':
+                    pageTitle = 'Product Listing Page';
+                    pagePath = '/products';
+                    break;
+                case 'product-detail-page':
+                    // For product detail, you might want to dynamically set the title/path based on the product
+                    pageTitle = document.getElementById('detail-product-name').textContent || 'Product Detail Page';
+                    pagePath = `/products/${document.getElementById('detail-add-to-cart-btn').dataset.productId || 'unknown'}`;
+                    break;
+                case 'checkout-page':
+                    pageTitle = 'Checkout Page';
+                    pagePath = '/checkout';
+                    break;
+                default:
+                    pageTitle = 'Unknown Page';
+                    pagePath = '/unknown';
+            }
+
+            // Ensure gtag is defined before calling it
+            if (typeof gtag === 'function') {
+                gtag('event', 'page_view', {
+                    page_title: pageTitle,
+                    page_location: window.location.href.split('#')[0] + pagePath, // Simulate URL change
+                    page_path: pagePath
+                });
+                console.log(`gtag: Sent page_view for ${pageTitle} (${pagePath})`);
+            }
+        }
+
+        /**
+         * Displays a custom modal with a given message.
+         * @param {string} message The message to display in the modal.
+         */
+        function showModal(message) {
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Hides the custom modal.
+         */
+        function hideModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        // --- Product Listing Page Functions ---
+
+        /**
+         * Renders all products onto the product listing page.
+         */
+        function renderProducts() {
+            const productGrid = document.getElementById('product-grid');
+            productGrid.innerHTML = ''; // Clear existing products
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card bg-white rounded-lg shadow-md p-6 flex flex-col justify-between';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${product.name}</h3>
+                    <p class="text-gray-600 mb-4 truncate">${product.description}</p>
+                    <p class="text-2xl font-bold text-blue-600 mb-4">₹${product.price.toFixed(2)}</p>
+                    <div class="flex flex-col space-y-3">
+                        <button class="view-detail-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300" data-product-id="${product.id}">
+                            View Details
+                        </button>
+                        <button class="add-to-cart-btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300" data-product-id="${product.id}">
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+
+            // Add event listeners for "View Details" buttons
+            document.querySelectorAll('.view-detail-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productId = event.target.dataset.productId;
+                    showProductDetailPage(productId);
+                });
+            });
+
+            // Add event listeners for "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productId = event.target.dataset.productId;
+                    addToCart(productId);
+                });
+            });
+        }
+
+        // --- Product Detail Page Functions ---
+
+        /**
+         * Populates and displays the product detail page for a given product ID.
+         * @param {string} productId The ID of the product to display.
+         */
+        function showProductDetailPage(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showModal('Product not found.');
+                return;
+            }
+
+            document.getElementById('detail-product-image').src = product.image;
+            document.getElementById('detail-product-name').textContent = product.name;
+            document.getElementById('detail-product-price').textContent = `₹${product.price.toFixed(2)}`;
+            document.getElementById('detail-product-description').textContent = product.description;
+            document.getElementById('detail-product-quantity').value = 1; // Reset quantity to 1
+
+            // Set data-product-id on the Add to Cart button for the detail page
+            const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
+            detailAddToCartBtn.dataset.productId = product.id;
+            detailAddToCartBtn.onclick = () => {
+                const quantity = parseInt(document.getElementById('detail-product-quantity').value);
+                addToCart(product.id, quantity);
+            };
+
+            showPage('product-detail-page');
+        }
+
+        // --- Cart and Checkout Functions ---
+
+        /**
+         * Adds a product to the cart.
+         * Also sends an 'add_to_cart' event to gtag.js.
+         * @param {string} productId The ID of the product to add.
+         * @param {number} quantity The quantity to add (default is 1).
+         */
+        function addToCart(productId, quantity = 1) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showModal('Error: Product not found.');
+                return;
+            }
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ ...product, quantity: quantity });
+            }
+            updateCartCount();
+            showModal(`${product.name} (x${quantity}) added to cart!`);
+
+            // --- gtag.js: Send add_to_cart event ---
+            if (typeof gtag === 'function') {
+                gtag('event', 'add_to_cart', {
+                    currency: 'INR',
+                    value: product.price * quantity,
+                    items: [{
+                        item_id: product.id,
+                        item_name: product.name,
+                        price: product.price,
+                        quantity: quantity
+                    }]
+                });
+                console.log(`gtag: Sent add_to_cart for ${product.name} (x${quantity})`);
+            }
+        }
+
+        /**
+         * Updates the cart count displayed in the header.
+         */
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = totalItems;
+        }
+
+        /**
+         * Renders the cart summary on the checkout page.
+         */
+        function renderCartSummary() {
+            const cartSummaryDiv = document.getElementById('cart-summary');
+            const cartTotalSpan = document.getElementById('cart-total');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+
+            cartSummaryDiv.innerHTML = ''; // Clear previous summary
+            let total = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+
+                    const cartItemDiv = document.createElement('div');
+                    cartItemDiv.className = 'flex justify-between items-center border-b border-gray-100 py-2';
+                    cartItemDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md mr-4">
+                            <div>
+                                <p class="font-semibold text-gray-800">${item.name}</p>
+                                <p class="text-sm text-gray-500">Quantity: ${item.quantity}</p>
+                            </div>
+                        </div>
+                        <p class="font-semibold text-gray-700">₹${itemTotal.toFixed(2)}</p>
+                    `;
+                    cartSummaryDiv.appendChild(cartItemDiv);
+                });
+            }
+            cartTotalSpan.textContent = `₹${total.toFixed(2)}`;
+        }
+
+        // --- Event Listeners and Initial Setup ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial page load: show home page
+            showPage('home-page'); // This will trigger the initial page_view event
+            renderProducts(); // Render products on load so they are ready when product listing is shown
+            updateCartCount(); // Initialize cart count
+
+            // Handle checkout form submission
+            document.getElementById('checkout-form').addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission
+                if (cart.length === 0) {
+                    showModal('Your cart is empty. Please add items before checking out.');
+                    return;
+                }
+
+                // --- gtag.js: Send purchase event ---
+                if (typeof gtag === 'function') {
+                    const transactionId = 'TID-' + Date.now(); // Simple unique ID for demonstration
+                    const totalValue = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    const itemsForGtag = cart.map(item => ({
+                        item_id: item.id,
+                        item_name: item.name,
+                        price: item.price,
+                        quantity: item.quantity
+                    }));
+
+                    gtag('event', 'purchase', {
+                        transaction_id: transactionId,
+                        currency: 'INR',
+                        value: totalValue,
+                        items: itemsForGtag
+                    });
+                    console.log(`gtag: Sent purchase event (Transaction ID: ${transactionId})`);
+                }
+
+                // Simulate order placement
+                showModal('Order Placed Successfully! Thank you for your purchase.');
+                cart = []; // Clear cart after successful order
+                updateCartCount();
+                document.getElementById('checkout-form').reset(); // Clear form fields
+                showPage('home-page'); // Redirect to home page after order
+            });
+        });
+    </script>
+</body>
+</html>
